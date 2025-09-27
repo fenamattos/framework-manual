@@ -1,6 +1,31 @@
-const criarElemento = (tag: string, conteudo = ""): HTMLElement => {
+interface atritutos {
+    [chave: string]: string | string[] | undefined
+}
+
+const idGenerator = (): string => Math.random().toString(36).substring(2,15);
+
+
+const criarElemento = (tag: string, conteudo = "", atritutos: atritutos = {}): HTMLElement => {
     const elemento = document.createElement(tag);
-    elemento.innerHTML = conteudo;
+    elemento.textContent = conteudo;
+
+
+    for (const [chave, valor] of Object.entries(atritutos)){
+        if (chave === 'class' && Array.isArray(valor)){
+            elemento.classList.add(...valor);
+            continue;
+        }
+
+         if (typeof valor === "string"){
+        elemento.setAttribute(chave, valor);
+        }
+    
+    
+    }
+
+    if(atritutos.id) elemento.setAttribute('id', `${tag}-${idGenerator()}`)
+
+
     return elemento;
 }
 
@@ -9,4 +34,4 @@ const renderizar = (elemento: HTMLElement): void => {
     root.appendChild(elemento)
 }
 
-export { criarElemento, renderizar }
+export { criarElemento, renderizar, atritutos }
